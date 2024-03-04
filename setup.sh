@@ -4,8 +4,8 @@ set -e
 # settings
 
 python_version="3.11"
-minimum_os_version="12.0"
-sdk_version="17.3"
+minimum_os_version="17.0"
+sdk_version="17.0"
 
 # Python package name, package version tag, package name alias
 
