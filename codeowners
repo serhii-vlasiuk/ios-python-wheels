@@ -6,7 +6,10 @@
 
 .github/                 @ydesgagn
 .gitignore               @ydesgagn
+.markdownlint.yml        @ydesgagn
+.shellcheckrc            @ydesgagn
 .soup.json               @ydesgagn
+.yamllint.yml            @ydesgagn
 codeowners               @ydesgagn
 bin/                     @ydesgagn
 docs/                    @ydesgagn
