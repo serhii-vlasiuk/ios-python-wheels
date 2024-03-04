@@ -116,7 +116,7 @@ for ((i = 0; i < count; i++)); do
   popd &>/dev/null
   rm -rf "${temp_dir}"
 
-  if ! [ -f "tests/${package_name}" ]; then
+  if ! [ -f "tests/test_${package_name}.py" ]; then
       echo "No tests found for package '${package_name}'!"
       exit 1
   fi

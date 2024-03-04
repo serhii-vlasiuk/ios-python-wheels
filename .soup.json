@@ -1,0 +1,50 @@
+{
+  "joblib": {
+    "language": "Python",
+    "package": "joblib",
+    "version": "1.2.0",
+    "license": "BSD License",
+    "description": "Lightweight pipelining with Python functions",
+    "website": "",
+    "last_verified_at": "2024-03-04",
+    "risk_level": "Low",
+    "requirements": "Dependency",
+    "verification_reasoning": "Dependency"
+  },
+  "threadpoolctl": {
+    "language": "Python",
+    "package": "threadpoolctl",
+    "version": "3.1.0",
+    "license": "BSD License",
+    "description": "threadpoolctl",
+    "website": "https://github.com/joblib/threadpoolctl",
+    "last_verified_at": "2024-03-04",
+    "risk_level": "Low",
+    "requirements": "Dependency",
+    "verification_reasoning": "Dependency"
+  },
+  "pip": {
+    "language": "Python",
+    "package": "pip",
+    "version": null,
+    "license": "MIT License",
+    "description": "The PyPA recommended tool for installing Python packages.",
+    "website": "",
+    "last_verified_at": "2024-03-04",
+    "risk_level": "Low",
+    "requirements": "Dependency",
+    "verification_reasoning": "Dependency"
+  },
+  "setuptools": {
+    "language": "Python",
+    "package": "setuptools",
+    "version": null,
+    "license": "MIT License",
+    "description": "Easily download, build, install, upgrade, and uninstall Python packages",
+    "website": "https://github.com/pypa/setuptools",
+    "last_verified_at": "2024-03-04",
+    "risk_level": "Low",
+    "requirements": "Dependency",
+    "verification_reasoning": "Dependency"
+  }
+}
