@@ -4,7 +4,7 @@ set -e
 # settings
 
 python_version="3.11"
-minimum_os_version="17.0"
+minimum_os_version="12.0"
 sdk_version="17.0"
 
 # Python package name, package version tag, package name alias
@@ -111,7 +111,8 @@ for ((i = 0; i < count; i++)); do
   pushd "${temp_dir}" &>/dev/null
   unzip -q "${wheel_file}"
   rm -f "${wheel_file}"
-  make-frameworks.sh --bundle-identifier "org" --bundle-name "${package_name}" --bundle-version "${package_version}" --input-dir "${temp_dir}" --minimum-os-version "${minimum_os_version}" --sdk_version "${sdk_version}" --output-dir "${frameworks_dir}"
+  # shellcheck disable=SC2010
+  make-frameworks.sh --bundle-identifier "org" --bundle-name "${package_name}" --bundle-version "${package_version}" --input-dir "${temp_dir}/$(ls | grep -v dist-info)" --minimum-os-version "${minimum_os_version}" --sdk_version "${sdk_version}" --output-dir "${frameworks_dir}"
   mv ./* "${site_packages_dir}"
   popd &>/dev/null
   rm -rf "${temp_dir}"
@@ -126,6 +127,7 @@ find "${SOURCES_DIR}" -name '*.egg-info' -exec cp -rf {} "${site_packages_dir}" 
 find "${site_packages_dir}" -name '*.a' -delete &>/dev/null || true
 find "${site_packages_dir}" -name '*.dylib' -delete &>/dev/null || true
 find "${site_packages_dir}" -name '*.so' -delete &>/dev/null || true
+find "${site_packages_dir}" -name '*.md' -delete &>/dev/null || true
 
 # compress output
 
