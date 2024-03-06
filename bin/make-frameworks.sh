@@ -110,9 +110,9 @@ for library in ./**/*.so ./**/*.dylib; do
   full_bundle_identifer="${full_bundle_identifer}.${base_library_name}"
 
   tmp_file_name="${framework_path}/${full_bundle_identifer}"
-  mv ${framework_lib_name} ${tmp_file_name}
-  install_name_tool -id "${full_bundle_identifer}" ${tmp_file_name} &>/dev/null
-  mv ${tmp_file_name} ${framework_lib_name}
+  mv "${framework_lib_name}" "${tmp_file_name}"
+  install_name_tool -id "${full_bundle_identifer}" "${tmp_file_name}" &>/dev/null
+  mv "${tmp_file_name}" "${framework_lib_name}"
 
   {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
