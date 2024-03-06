@@ -128,7 +128,7 @@ for library in ./**/*.so ./**/*.dylib; do
     echo "    <key>CFBundleShortVersionString</key>"
     echo "    <string>${bundle_version%.*}</string>"
     echo "    <key>CFBundleExecutable</key>"
-    echo "    <string>$(basename "${library/darwin/iphoneos}")</string>"
+    echo "    <string>$(basename "${library_file}")</string>"
     echo "</dict>"
     echo "</plist>"
   } >"${output_dir}/${folder_name}/Info.plist"

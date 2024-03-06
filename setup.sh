@@ -10,11 +10,14 @@ sdk_version="17.0"
 # Python package name, package version tag, package name alias
 
 # shellcheck disable=SC2034
-numpy=("numpy" "1.26.4")
+#numpy=("numpy" "1.26.4", "numpy)
+numpy=("numpy" "1.24.2" "numpy")
 # shellcheck disable=SC2034
-scikit_learn=("scikit-learn" "1.4.0")
+#scikit_learn=("scikit-learn" "1.4.0" "sklearn")
+scikit_learn=("scikit-learn" "1.2.2" "sklearn")
 # shellcheck disable=SC2034
-scipy=("scipy" "1.12.0")
+#scipy=("scipy" "1.12.0" "scipy")
+scipy=("scipy" "1.11.1" "scipy")
 
 packages=(
   numpy[@]
@@ -95,6 +98,7 @@ count=${#packages[@]}
 for ((i = 0; i < count; i++)); do
   package_name="${!packages[i]:0:1}"
   package_version="${!packages[i]:1:1}"
+  package_bundle="${!packages[i]:2:1}"
   echo "Processing package '${package_name}' with version '${package_version}' and Python ${python_version}..."
   echo "${package_name}: ${package_version/v/}" >> "${version_file}"
   wheel_url=$(curl --silent --location "https://pypi.org/pypi/${package_name}/json" | jq --raw-output --arg version "${package_version}" --arg py_version "${python_version//.}" '.releases[$version][] | select(.filename | test("-cp" + $py_version + "-cp" + $py_version + "-macosx_[0-9]+_[0-9]+_arm64.whl$")) | .url' | head -n 1) || true
@@ -112,7 +116,7 @@ for ((i = 0; i < count; i++)); do
   unzip -q "${wheel_file}"
   rm -f "${wheel_file}"
   # shellcheck disable=SC2010
-  make-frameworks.sh --bundle-identifier "org" --bundle-name "${package_name}" --bundle-version "${package_version}" --input-dir "${temp_dir}/$(ls | grep -v dist-info)" --minimum-os-version "${minimum_os_version}" --sdk_version "${sdk_version}" --output-dir "${frameworks_dir}"
+  make-frameworks.sh --bundle-identifier "org" --bundle-name "${package_bundle}" --bundle-version "${package_version}" --input-dir "${temp_dir}/$(ls | grep -v dist-info)" --minimum-os-version "${minimum_os_version}" --sdk_version "${sdk_version}" --output-dir "${frameworks_dir}"
   mv ./* "${site_packages_dir}"
   popd &>/dev/null
   rm -rf "${temp_dir}"
