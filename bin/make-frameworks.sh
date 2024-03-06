@@ -78,11 +78,11 @@ for library in ./**/*.so ./**/*.dylib; do
 
   if [ "${directory}" = "." ]; then
     # shellcheck disable=SC2154
-    folder_name="${bundle_name##*.}-${library_name}.framework"
+    folder_name="${bundle_name}-${library_name}.framework"
     prefix_package="${bundle_name}"
   else
     # shellcheck disable=SC2154
-    folder_name="${bundle_name##*.}-$(echo "${directory}" | tr '/' '-')-${library_name}.framework"
+    folder_name="${bundle_name}-$(echo "${directory}" | tr '/' '-')-${library_name}.framework"
     prefix_package="${bundle_name}.$(echo "${directory}" | tr '/' '.')"
   fi
 
@@ -94,15 +94,25 @@ for library in ./**/*.so ./**/*.dylib; do
   mkdir "${output_dir}/${folder_name}"
   library_file="${library/darwin/iphoneos}"
   library_file="${library_file/.so/.dylib}"
-  library_name="$(basename "${library_file}")"
   echo "Processing ${library_file}..."
+  # shellcheck disable=SC2154
+  xcrun vtool -arch arm64 -set-build-version 2 "${minimum_os_version}" "${sdk_version}" -replace -output "${library}" "${library}" &>/dev/null
+
+  framework_path="${output_dir}/${folder_name}"
+  base_library_name="$(basename "${library_file}")"
+  framework_lib_name="${framework_path}/${base_library_name}"
+  cp "${library}" "${framework_lib_name}"
+
   # shellcheck disable=SC2154
   full_bundle_identifer="${bundle_identifier//_/}.${prefix_package//_/}.${library_name//_/.}"
   full_bundle_identifer="${full_bundle_identifer/../.}"
-  # shellcheck disable=SC2154
-  xcrun vtool -arch arm64 -set-build-version 2 "${minimum_os_version}" "${sdk_version}" -replace -output "${library}" "${library}" &>/dev/null
-  install_name_tool -id "${full_bundle_identifer}" "${library}" &>/dev/null
-  cp "${library}" "${output_dir}/${folder_name}/$(basename "${library_file}")"
+
+  full_bundle_identifer="${full_bundle_identifer}.${base_library_name}"
+
+  tmp_file_name="${framework_path}/${full_bundle_identifer}"
+  mv ${framework_lib_name} ${tmp_file_name}
+  install_name_tool -id "${full_bundle_identifer}" ${tmp_file_name} &>/dev/null
+  mv "${tmp_file_name}" "${framework_lib_name}"
 
   {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -137,3 +147,4 @@ for library in ./**/*.so ./**/*.dylib; do
 done
 
 popd &>/dev/null
+
