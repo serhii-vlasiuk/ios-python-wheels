@@ -78,11 +78,11 @@ for library in ./**/*.so ./**/*.dylib; do
 
   if [ "${directory}" = "." ]; then
     # shellcheck disable=SC2154
-    folder_name="${bundle_name}-${library_name}.framework"
+    folder_name="${bundle_name##*.}-${library_name}.framework"
     prefix_package="${bundle_name}"
   else
     # shellcheck disable=SC2154
-    folder_name="${bundle_name}-$(echo "${directory}" | tr '/' '-')-${library_name}.framework"
+    folder_name="${bundle_name##*.}-$(echo "${directory}" | tr '/' '-')-${library_name}.framework"
     prefix_package="${bundle_name}.$(echo "${directory}" | tr '/' '.')"
   fi
 
@@ -94,13 +94,15 @@ for library in ./**/*.so ./**/*.dylib; do
   mkdir "${output_dir}/${folder_name}"
   library_file="${library/darwin/iphoneos}"
   library_file="${library_file/.so/.dylib}"
+  library_name="$(basename "${library_file}")"
   echo "Processing ${library_file}..."
-  # shellcheck disable=SC2154
-  xcrun vtool -arch arm64 -set-build-version 2 "${minimum_os_version}" "${sdk_version}" -replace -output "${library}" "${library}" &>/dev/null
-  cp "${library}" "${output_dir}/${folder_name}/$(basename "${library_file}")"
   # shellcheck disable=SC2154
   full_bundle_identifer="${bundle_identifier//_/}.${prefix_package//_/}.${library_name//_/.}"
   full_bundle_identifer="${full_bundle_identifer/../.}"
+  # shellcheck disable=SC2154
+  xcrun vtool -arch arm64 -set-build-version 2 "${minimum_os_version}" "${sdk_version}" -replace -output "${library}" "${library}" &>/dev/null
+  install_name_tool -id "${full_bundle_identifer}" "${library}" &>/dev/null
+  cp "${library}" "${output_dir}/${folder_name}/$(basename "${library_file}")"
 
   {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
